@@ -1,16 +1,52 @@
-namespace windows_theme_switcher;
+using System.Reflection;
+using Microsoft.Win32;
 
-static class Program
+namespace WindowsThemeSwitcher;
+
+class Program : ApplicationContext
 {
-    /// <summary>
-    ///  The main entry point for the application.
-    /// </summary>
     [STAThread]
-    static void Main()
+    private static void Main()
     {
-        // To customize application configuration such as set high DPI settings or default font,
-        // see https://aka.ms/applicationconfiguration.
         ApplicationConfiguration.Initialize();
-        Application.Run(new Form1());
-    }    
+        Application.Run(new Program());
+    }
+
+    private readonly Icon moonIcon, sunIcon;
+    private readonly NotifyIcon notifyIcon;
+
+    private Program()
+    {
+        moonIcon = new Icon(GetResourceStream("moon.ico"));
+        sunIcon = new Icon(GetResourceStream("sun.ico"));
+
+        notifyIcon = new NotifyIcon();
+        UpdateIcon();
+        notifyIcon.DoubleClick += (s, e) => SwitchTheme();
+        notifyIcon.Visible = true;
+
+        SystemEvents.UserPreferenceChanged += (s, e) => UpdateIcon();
+    }
+
+    private static Stream GetResourceStream(string name)
+    {
+        var assembly = Assembly.GetExecutingAssembly();
+        var stream = assembly.GetManifestResourceStream($"WindowsThemeSwitcher.Resources.{name}");
+        return stream ?? throw new Exception($"Failed to load resource '{name}'.");
+    }
+
+    private static void SwitchTheme()
+    {
+        var currentAppsTheme = Theme.AppsTheme;
+        var newTheme = currentAppsTheme == Theme.Light ? Theme.Dark : Theme.Light;
+        Theme.AppsTheme = newTheme;
+        Theme.SystemTheme = newTheme;
+        Theme.NotifyThemeChange();
+    }
+
+    private void UpdateIcon()
+    {
+        var currentSystemTheme = Theme.SystemTheme;
+        notifyIcon.Icon = currentSystemTheme == Theme.Light ? sunIcon : moonIcon;
+    }
 }

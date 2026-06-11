@@ -37,7 +37,6 @@ jobs:
       - name: Publish
         run: |
           dotnet publish `
-            --no-build `
             --verbosity normal `
             --self-contained `
             -p:PublishSingleFile=true `

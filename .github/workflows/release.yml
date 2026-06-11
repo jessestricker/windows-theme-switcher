@@ -25,8 +25,8 @@ jobs:
         uses: actions/setup-dotnet@9a946fdbd5fb07b82b2f5a4466058b876ab72bb2 # v5.3.0
       - name: Install git-cliff
         run: |
-          winget install git-cliff \
-            --accept-source-agreements \
+          winget install git-cliff `
+            --accept-source-agreements `
             --disable-interactivity
       - name: Restore dependencies
         run: dotnet restore
@@ -36,11 +36,11 @@ jobs:
         run: dotnet test --no-build --verbosity normal
       - name: Publish
         run: |
-          dotnet publish \
-            --no-build \
-            --verbosity normal \
-            --self-contained \
-            -p:PublishSingleFile=true \
+          dotnet publish `
+            --no-build `
+            --verbosity normal `
+            --self-contained `
+            -p:PublishSingleFile=true `
             --runtime win-x64
       - name: Get next version
         id: get-next-version
@@ -49,8 +49,8 @@ jobs:
         env:
           version: ${{ steps.get-next-version.outputs.value }}
         run: |
-          gh release create \
-            --fail-on-no-commits \
-            --generate-notes \
-            v"$version" \
+          gh release create `
+            --fail-on-no-commits `
+            --generate-notes `
+            v"$version" `
             artifacts\publish\WindowsThemeSwitcher\release\*

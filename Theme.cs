@@ -59,6 +59,5 @@ class Theme
         }
     }
 
-    private Theme()
-    { }
+    private Theme() { }
 }

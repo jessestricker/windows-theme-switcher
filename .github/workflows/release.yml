@@ -32,7 +32,13 @@ jobs:
       - name: Test
         run: dotnet test --no-build --verbosity normal
       - name: Publish
-        run: dotnet publish --no-build --verbosity normal --self-contained -p:PublishSingleFile=true
+        run: |
+          dotnet publish \
+            --no-build \
+            --verbosity normal \
+            --self-contained \
+            -p:PublishSingleFile=true \
+            --runtime win-x64
       - name: Get next version
         id: get-next-version
         run: echo "value=$(git-cliff --bumped-version)" >> "$GITHUB_OUTPUT"

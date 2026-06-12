@@ -50,4 +50,4 @@ jobs:
             --fail-on-no-commits `
             --notes-file "$changelog" `
             v"$version" `
-            artifacts\publish\WindowsThemeSwitcher\release\*
+            artifacts\publish\WindowsThemeSwitcher\release_win-x64\*

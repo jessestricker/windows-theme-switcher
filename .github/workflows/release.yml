@@ -50,6 +50,6 @@ jobs:
         run: |
           gh release create `
             --fail-on-no-commits `
-            --notes-file "$changelog" `
-            v"$version" `
+            --notes-file "$env:changelog" `
+            "v$env:version" `
             artifacts\publish\WindowsThemeSwitcher\release_win-x64\*

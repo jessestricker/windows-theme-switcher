@@ -1,0 +1,5 @@
+[git]
+tag_pattern = "v[0-9].*"
+
+[bump]
+initial_tag = "v0.1.0"

@@ -42,7 +42,7 @@ jobs:
         uses: orhun/git-cliff-action@f50e11560dce63f7c33227798f90b924471a88b5 # v4.8.0
         id: git-cliff
         with:
-          args: --verbose --unreleased --bump
+          args: --verbose --unreleased --bump --github-repo ${{ github.repository }}
       - name: Release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -51,6 +51,6 @@ jobs:
         run: |
           gh release create `
             --fail-on-no-commits `
-            --notes-file "$env:changelog" `
-            "v$env:version" `
+            --notes-file $env:changelog `
+            $env:version `
             artifacts\publish\WindowsThemeSwitcher\release_win-x64\WindowsThemeSwitcher.exe

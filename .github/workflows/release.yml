@@ -42,6 +42,7 @@ jobs:
         id: git-cliff
       - name: Release
         env:
+          GH_TOKEN: ${{ github.token }}
           changelog: ${{ steps.git-cliff.outputs.changelog }}
           version: ${{ steps.git-cliff.outputs.version }}
         run: |

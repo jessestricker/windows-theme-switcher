@@ -52,4 +52,4 @@ jobs:
             --fail-on-no-commits `
             --notes-file "$env:changelog" `
             "v$env:version" `
-            artifacts\publish\WindowsThemeSwitcher\release_win-x64\*
+            artifacts\publish\WindowsThemeSwitcher\release_win-x64\WindowsThemeSwitcher.exe

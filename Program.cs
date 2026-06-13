@@ -20,9 +20,25 @@ class Program : ApplicationContext
         moonIcon = new Icon(GetResourceStream("moon.ico"));
         sunIcon = new Icon(GetResourceStream("sun.ico"));
 
+        var startWithWindowsItem = new ToolStripMenuItem("Start with Windows")
+        {
+            Checked = Autostart,
+            CheckOnClick = true,
+        };
+        startWithWindowsItem.CheckedChanged += (s, e) => Autostart = startWithWindowsItem.Checked;
+
         notifyIcon = new NotifyIcon()
         {
             Text = "Windows Theme Switcher",
+            ContextMenuStrip = new ContextMenuStrip()
+            {
+                Items =
+                {
+                    startWithWindowsItem,
+                    new ToolStripSeparator(),
+                    new ToolStripMenuItem("Exit", null, (s, e) => Application.Exit()),
+                },
+            },
         };
         notifyIcon.DoubleClick += (s, e) => SwitchTheme();
 
@@ -52,5 +68,25 @@ class Program : ApplicationContext
     {
         var currentSystemTheme = Theme.SystemTheme;
         notifyIcon.Icon = currentSystemTheme == Theme.Light ? sunIcon : moonIcon;
+    }
+
+    private const string AutostartRegistryKeyName = @"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run";
+    private const string AutostartRegistryValueName = "WindowsThemeSwitcher";
+
+    private static bool Autostart
+    {
+        get => Registry.GetValue(AutostartRegistryKeyName, AutostartRegistryValueName, null) != null;
+        set
+        {
+            if (value)
+            {
+                var processPath = Environment.ProcessPath ?? throw new InvalidOperationException("Can not get current process executable path.");
+                Registry.SetValue(AutostartRegistryKeyName, AutostartRegistryValueName, processPath);
+            }
+            else
+            {
+                Registry.SetValue(AutostartRegistryKeyName, AutostartRegistryValueName, "");
+            }
+        }
     }
 }

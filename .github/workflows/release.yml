@@ -40,7 +40,8 @@ jobs:
         env:
           version: ${{ steps.git-cliff.outputs.version }}
         run: |
-          dotnet publish --verbosity normal --runtime win-x64 -p:Version=$env:version
+          $version = $env:version.TrimStart("v")
+          dotnet publish --verbosity normal --runtime win-x64 -p:Version=$version
       - name: Release
         env:
           GH_TOKEN: ${{ github.token }}

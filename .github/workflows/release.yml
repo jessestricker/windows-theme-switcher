@@ -32,12 +32,7 @@ jobs:
       - name: Test
         run: dotnet test --no-build --verbosity normal
       - name: Publish
-        run: |
-          dotnet publish `
-            --verbosity normal `
-            --self-contained `
-            -p:PublishSingleFile=true `
-            --runtime win-x64
+        run: dotnet publish --verbosity normal --runtime win-x64
       - name: Run git-cliff
         uses: orhun/git-cliff-action@f50e11560dce63f7c33227798f90b924471a88b5 # v4.8.0
         id: git-cliff

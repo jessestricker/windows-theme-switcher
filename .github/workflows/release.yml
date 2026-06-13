@@ -31,13 +31,16 @@ jobs:
         run: dotnet build --no-restore
       - name: Test
         run: dotnet test --no-build --verbosity normal
-      - name: Publish
-        run: dotnet publish --verbosity normal --runtime win-x64
       - name: Run git-cliff
         uses: orhun/git-cliff-action@f50e11560dce63f7c33227798f90b924471a88b5 # v4.8.0
         id: git-cliff
         with:
           args: --verbose --unreleased --bump --github-repo ${{ github.repository }}
+      - name: Publish
+        env:
+          version: ${{ steps.git-cliff.outputs.version }}
+        run: |
+          dotnet publish --verbosity normal --runtime win-x64 -p:Version=$env:version
       - name: Release
         env:
           GH_TOKEN: ${{ github.token }}

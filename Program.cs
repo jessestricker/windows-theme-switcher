@@ -8,8 +8,21 @@ class Program : ApplicationContext
     [STAThread]
     private static void Main()
     {
-        ApplicationConfiguration.Initialize();
-        Application.Run(new Program());
+        using var mutex = new Mutex(initiallyOwned: false, "WindowsThemeSwitcher_1b375734-2b71-4099-b371-5abf855a6626");
+        if (!mutex.WaitOne(TimeSpan.Zero))
+        {
+            Environment.FailFast("Application is already running.");
+        }
+
+        try
+        {
+            ApplicationConfiguration.Initialize();
+            Application.Run(new Program());
+        }
+        finally
+        {
+            mutex.ReleaseMutex();
+        }
     }
 
     private readonly Icon moonIcon, sunIcon;

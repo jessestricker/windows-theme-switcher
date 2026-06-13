@@ -20,9 +20,13 @@ class Program : ApplicationContext
         moonIcon = new Icon(GetResourceStream("moon.ico"));
         sunIcon = new Icon(GetResourceStream("sun.ico"));
 
-        notifyIcon = new NotifyIcon();
-        UpdateIcon();
+        notifyIcon = new NotifyIcon()
+        {
+            Text = "Windows Theme Switcher",
+        };
         notifyIcon.DoubleClick += (s, e) => SwitchTheme();
+
+        UpdateIcon();
         notifyIcon.Visible = true;
 
         SystemEvents.UserPreferenceChanged += (s, e) => UpdateIcon();

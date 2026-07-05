@@ -1,6 +1,10 @@
+[git]
+commit_parsers = [
+  { message = "^feat", group = "<!-- 0 -->Features" },
+  { message = "^fix", group = "<!-- 1 -->Bug Fixes" },
+  { message = "^chore", skip = true },
+]
+tag_pattern = "v[0-9].*"
+
 [bump]
 initial_tag = "v0.1.0"
-no_increment_regex = "chore"
-
-[git]
-tag_pattern = "v[0-9].*"

@@ -11,8 +11,40 @@ concurrency:
 permissions: {}
 
 jobs:
+  build:
+    name: Build
+    uses: ./.github/workflows/build.yml
+
+  check-for-release:
+    name: Check for release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      bump-type: ${{ steps.get-bump-type.outputs.value }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+      - name: Install git-cliff
+        uses: taiki-e/install-action@c93ccc03e00cd0e08e494f5fd058a6c55a6a1907 # v2.82.8
+        with:
+          tool: git-cliff
+      - name: Get bump type
+        id: get-bump-type
+        run: |
+          context=$(git-cliff --verbose --unreleased --bump --context)
+          bump_type=$(jq --raw-output '.[0].bump_type' <<< "$context")
+          echo "value=$bump_type" >> "$GITHUB_OUTPUT"
+
   release:
     name: Release
+    needs: check-for-release
+    if: ${{ needs.check-for-release.outputs.bump-type != 'null' }}
     runs-on: windows-latest
     permissions:
       contents: write # to create GitHub release
@@ -27,10 +59,6 @@ jobs:
         uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5.4.0
       - name: Restore dependencies
         run: dotnet restore
-      - name: Build
-        run: dotnet build --no-restore
-      - name: Test
-        run: dotnet test --no-build --verbosity normal
       - name: Run git-cliff
         uses: orhun/git-cliff-action@f50e11560dce63f7c33227798f90b924471a88b5 # v4.8.0
         id: git-cliff

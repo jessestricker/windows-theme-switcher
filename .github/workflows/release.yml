@@ -81,5 +81,6 @@ jobs:
           gh release create `
             --fail-on-no-commits `
             --notes-file $env:changelog `
+            --title $env:version `
             $env:version `
             artifacts\publish\WindowsThemeSwitcher\release_win-x64\WindowsThemeSwitcher.exe

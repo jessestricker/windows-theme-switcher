@@ -33,7 +33,7 @@ jobs:
           fetch-tags: true
           persist-credentials: false
       - name: Install git-cliff
-        uses: taiki-e/install-action@c93ccc03e00cd0e08e494f5fd058a6c55a6a1907 # v2.82.8
+        uses: taiki-e/install-action@fcf5432d9f50d67e37ee6e29bdb7a224ff67b4a7 # v2.86.8
         with:
           tool: git-cliff
       - name: Get bump type
